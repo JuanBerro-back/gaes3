@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GAES 3 | Sistema de Gestión y Control de Deserciones SENA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sena-brand">
+          <div class="sena-logo-icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <h2>GAES 3</h2>
+            <span>SENA • Retención</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">PRINCIPAL</div>
+        <button class="nav-item active" data-tab="dashboard">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span>Tablero de Control</span>
+        </button>
+        <button class="nav-item" data-tab="casos">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          <span>Casos de Deserción</span>
+          <span class="badge-pill" id="badge-total-casos">0</span>
+        </button>
+        <button class="nav-item" data-tab="aprendices">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span>Aprendices y Fichas</span>
+        </button>
+        
+        <div class="nav-section-label">CALIDAD Y TRAZABILIDAD</div>
+        <button class="nav-item" data-tab="alertas">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <span>Alertas Tempranas</span>
+          <span class="badge-pill danger" id="badge-alertas">0</span>
+        </button>
+        <button class="nav-item" data-tab="auditoria">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <span>Auditoría Inmutable</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-card">
+          <div class="user-avatar">JB</div>
+          <div class="user-info">
+            <span class="user-name">Juan David Berroterán</span>
+            <span class="user-role">Líder GAES 3</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-title">
+          <h1 id="page-title">Tablero de Control</h1>
+          <p id="page-subtitle">Monitoreo integral y gestión de alertas tempranas del SENA</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-outline" id="btn-nuevo-aprendiz">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+            <span>Registrar Aprendiz</span>
+          </button>
+          <button class="btn btn-primary" id="btn-nuevo-caso">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>Nuevo Caso Deserción</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="content-body">
+        <!-- VIEW: DASHBOARD -->
+        <section id="view-dashboard" class="view-section active">
+          <!-- KPI Cards Grid -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon-wrapper bg-emerald">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              </div>
+              <div class="stat-data">
+                <span class="stat-label">Total Casos Registrados</span>
+                <h3 class="stat-value" id="stat-total-casos">-</h3>
+                <span class="stat-sub positive">Expedientes en sistema</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon-wrapper bg-blue">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              </div>
+              <div class="stat-data">
+                <span class="stat-label">Seguimiento Activo</span>
+                <h3 class="stat-value" id="stat-casos-activos">-</h3>
+                <span class="stat-sub info">En intervención FSM</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon-wrapper bg-green">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </div>
+              <div class="stat-data">
+                <span class="stat-label">Retornos Logrados</span>
+                <h3 class="stat-value text-sena" id="stat-retornos">-</h3>
+                <span class="stat-sub positive">Aprendices reintegrados</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon-wrapper bg-amber">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+              </div>
+              <div class="stat-data">
+                <span class="stat-label">Alertas de Inactividad</span>
+                <h3 class="stat-value text-danger" id="stat-alertas">-</h3>
+                <span class="stat-sub warning">&gt; 7 días sin actuación</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts and Insights Row -->
+          <div class="dashboard-grid">
+            <!-- Distribution by State -->
+            <div class="card chart-card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Distribución por Estado del Flujo (FSM)</h3>
+                  <p class="card-desc">Etapas actuales de los casos en investigación y seguimiento</p>
+                </div>
+              </div>
+              <div class="card-content">
+                <div class="distribution-list" id="distribution-bars">
+                  <!-- Generated dynamically -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Distribution by Program -->
+            <div class="card chart-card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Casos por Programa de Formación</h3>
+                  <p class="card-desc">Concentración de casos reportados por especialidad</p>
+                </div>
+              </div>
+              <div class="card-content">
+                <div class="program-bars" id="program-bars">
+                  <!-- Generated dynamically -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Cases Table on Dashboard -->
+          <div class="card table-card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Casos Recientes Requiriendo Atención</h3>
+                <p class="card-desc">Últimos casos registrados o con seguimiento pendiente</p>
+              </div>
+              <button class="btn btn-sm btn-ghost" onclick="switchTab('casos')">Ver todos &rarr;</button>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Número</th>
+                    <th>Aprendiz</th>
+                    <th>Ficha y Programa</th>
+                    <th>Estado FSM</th>
+                    <th>Inactividad</th>
+                    <th>Fecha Reporte</th>
+                    <th class="text-right">Acción</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboard-recent-cases">
+                  <tr><td colspan="7" class="text-center py-4">Cargando casos...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW: CASOS -->
+        <section id="view-casos" class="view-section">
+          <div class="card">
+            <!-- Filter Bar -->
+            <div class="table-filter-bar">
+              <div class="search-box">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" id="input-search-casos" placeholder="Buscar por aprendiz, documento, número caso, ficha...">
+              </div>
+
+              <div class="filter-tabs" id="casos-filter-tabs">
+                <button class="filter-btn active" data-filter="TODOS">Todos</button>
+                <button class="filter-btn" data-filter="ACTIVOS">En Gestión</button>
+                <button class="filter-btn" data-filter="EN_SEGUIMIENTO">En Seguimiento</button>
+                <button class="filter-btn" data-filter="PROPUESTO_CIERRE">Propuestos Cierre</button>
+                <button class="filter-btn" data-filter="CERRADO">Cerrados</button>
+                <button class="filter-btn danger-tab" data-filter="ALERTAS">⚠️ Inactivos (&gt;7d)</button>
+              </div>
+            </div>
+
+            <!-- Casos Table -->
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Caso</th>
+                    <th>Aprendiz</th>
+                    <th>Documento</th>
+                    <th>Ficha / Programa</th>
+                    <th>Estado FSM</th>
+                    <th>Gestor Asignado</th>
+                    <th>Actuaciones</th>
+                    <th>Alerta</th>
+                    <th class="text-right">Detalle</th>
+                  </tr>
+                </thead>
+                <tbody id="table-casos-body">
+                  <tr><td colspan="9" class="text-center py-4">Cargando registros...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW: APRENDICES -->
+        <section id="view-aprendices" class="view-section">
+          <div class="card">
+            <div class="table-filter-bar">
+              <div class="search-box">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" id="input-search-aprendices" placeholder="Filtrar aprendices por nombre, documento o ficha...">
+              </div>
+              <button class="btn btn-primary" onclick="openModal('modal-nuevo-aprendiz')">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>Nuevo Aprendiz</span>
+              </button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Aprendiz</th>
+                    <th>Identificación</th>
+                    <th>Contacto</th>
+                    <th>Ficha</th>
+                    <th>Programa de Formación</th>
+                    <th>Jornada</th>
+                    <th class="text-right">Acción</th>
+                  </tr>
+                </thead>
+                <tbody id="table-aprendices-body">
+                  <tr><td colspan="7" class="text-center py-4">Cargando aprendices...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW: ALERTAS -->
+        <section id="view-alertas" class="view-section">
+          <div class="alert-banner">
+            <div class="alert-banner-icon">
+              <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            </div>
+            <div>
+              <h3>Protocolo de Atención Temprana GAES 3</h3>
+              <p>Los casos sin actuación por más de 7 días representan riesgo inminente de deserción no contenida. Se requiere contacto urgente o elevación a Bienestar al Aprendiz.</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Caso</th>
+                    <th>Aprendiz</th>
+                    <th>Ficha</th>
+                    <th>Días sin Contacto</th>
+                    <th>Estado Actual</th>
+                    <th>Responsable</th>
+                    <th class="text-right">Intervenir</th>
+                  </tr>
+                </thead>
+                <tbody id="table-alertas-body">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW: AUDITORIA -->
+        <section id="view-auditoria" class="view-section">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Trazabilidad y Auditoría Inmutable</h3>
+                <p class="card-desc">Historial cronológico de cambios de estado, actuaciones y transiciones</p>
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="timeline" id="auditoria-global-timeline">
+                <div class="timeline-empty">Seleccione un caso específico para ver su auditoría pormenorizada o explore los eventos recientes.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- SLIDE-OVER DRAWER: DETALLE DEL CASO -->
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+  <aside class="drawer" id="case-drawer">
+    <div class="drawer-header">
+      <div class="drawer-title-group">
+        <span class="drawer-pretitle" id="drawer-caso-numero">DES-000000</span>
+        <h2 id="drawer-aprendiz-nombre">Nombre del Aprendiz</h2>
+        <span class="badge" id="drawer-caso-estado">ESTADO</span>
+      </div>
+      <button class="drawer-close" id="drawer-close-btn">&times;</button>
+    </div>
+
+    <!-- FSM Stepper -->
+    <div class="fsm-stepper-container">
+      <div class="fsm-stepper" id="fsm-stepper">
+        <div class="step" data-step="REGISTRADO">
+          <div class="step-circle">1</div>
+          <span class="step-label">Registrado</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step" data-step="ASIGNADO">
+          <div class="step-circle">2</div>
+          <span class="step-label">Asignado</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step" data-step="EN_INVESTIGACION">
+          <div class="step-circle">3</div>
+          <span class="step-label">Investigación</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step" data-step="EN_SEGUIMIENTO">
+          <div class="step-circle">4</div>
+          <span class="step-label">Seguimiento</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step" data-step="PROPUESTO_CIERRE">
+          <div class="step-circle">5</div>
+          <span class="step-label">Propuesto</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step" data-step="CERRADO">
+          <div class="step-circle">6</div>
+          <span class="step-label">Cierre</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transition Actions Toolbar -->
+    <div class="fsm-actions-bar">
+      <span class="fsm-actions-title">Acciones de Estado Disponibles:</span>
+      <div class="fsm-buttons" id="fsm-dynamic-buttons">
+        <!-- Injected dynamically based on transiciones_permitidas -->
+      </div>
+    </div>
+
+    <!-- Drawer Tabs -->
+    <div class="drawer-tabs">
+      <button class="drawer-tab-btn active" data-dtab="actuaciones">Actuaciones (<span id="count-drawer-actuaciones">0</span>)</button>
+      <button class="drawer-tab-btn" data-dtab="compromisos">Compromisos (<span id="count-drawer-compromisos">0</span>)</button>
+      <button class="drawer-tab-btn" data-dtab="info">Datos Aprendiz</button>
+      <button class="drawer-tab-btn" data-dtab="auditoria">Auditoría (<span id="count-drawer-auditoria">0</span>)</button>
+    </div>
+
+    <div class="drawer-body">
+      <!-- DTAB: Actuaciones -->
+      <div class="dtab-content active" id="dtab-actuaciones">
+        <div class="dtab-action-bar">
+          <h4>Bitácora de Contactos y Evidencias</h4>
+          <button class="btn btn-sm btn-primary" id="btn-open-modal-actuacion">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>Registrar Actuación</span>
+          </button>
+        </div>
+        <div class="timeline" id="drawer-actuaciones-timeline">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- DTAB: Compromisos -->
+      <div class="dtab-content" id="dtab-compromisos">
+        <div class="dtab-action-bar">
+          <h4>Acuerdos y Compromisos de Retención</h4>
+          <button class="btn btn-sm btn-outline" id="btn-open-modal-compromiso">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>Nuevo Compromiso</span>
+          </button>
+        </div>
+        <div class="compromisos-list" id="drawer-compromisos-list">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- DTAB: Info Aprendiz -->
+      <div class="dtab-content" id="dtab-info">
+        <div class="info-grid" id="drawer-info-grid">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- DTAB: Auditoría -->
+      <div class="dtab-content" id="dtab-auditoria">
+        <div class="timeline" id="drawer-auditoria-timeline">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MODAL: NUEVO CASO -->
+  <div class="modal" id="modal-nuevo-caso">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Registrar Nuevo Caso de Deserción</h3>
+        <button class="modal-close" onclick="closeModal('modal-nuevo-caso')">&times;</button>
+      </div>
+      <form id="form-nuevo-caso">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="select-caso-aprendiz">Seleccionar Aprendiz *</label>
+            <select id="select-caso-aprendiz" class="form-control" required>
+              <option value="">-- Seleccionar aprendiz --</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="input-caso-motivo">Motivo Inicial de Deserción *</label>
+            <input type="text" id="input-caso-motivo" class="form-control" placeholder="Ej: Inasistencia reiterada, motivos económicos, cruce laboral..." required>
+          </div>
+
+          <div class="form-group">
+            <label for="input-caso-descripcion">Descripción y Hallazgos Iniciales</label>
+            <textarea id="input-caso-descripcion" class="form-control" rows="3" placeholder="Detalle observaciones dadas por el instructor o vocero..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="select-caso-asignado">Asignar Gestor GAES Responsable</label>
+            <select id="select-caso-asignado" class="form-control">
+              <option value="">-- Dejar en asignación pendiente (REGISTRADO) --</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" onclick="closeModal('modal-nuevo-caso')">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Registrar Caso</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: NUEVA ACTUACIÓN -->
+  <div class="modal" id="modal-nueva-actuacion">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Registrar Actuación de Seguimiento</h3>
+        <button class="modal-close" onclick="closeModal('modal-nueva-actuacion')">&times;</button>
+      </div>
+      <form id="form-nueva-actuacion">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="select-actuacion-tipo">Tipo de Actuación *</label>
+              <select id="select-actuacion-tipo" class="form-control" required>
+                <option value="LLAMADA">Llamada Telefónica</option>
+                <option value="CITACION">Citación Formal</option>
+                <option value="REUNION">Reunión Presencial</option>
+                <option value="VISITA">Visita Domiciliaria</option>
+                <option value="CORREO">Correo Electrónico</option>
+                <option value="ACTA">Acta de Compromiso</option>
+                <option value="ACUERDO">Acuerdo de Permanencia</option>
+                <option value="OTRO">Otro Medio</option>
+              </select>
+            </div>
+            <div class="form-group col">
+              <label for="select-actuacion-resultado">Resultado Obtenido *</label>
+              <select id="select-actuacion-resultado" class="form-control" required>
+                <option value="CONTACTADO">Contactado Directamente</option>
+                <option value="ACUERDO_ALCANZADO">Acuerdo Alcanzado</option>
+                <option value="NO_CONTACTADO">No Contactado / Buzón</option>
+                <option value="REPROGRAMADO">Reprogramado</option>
+                <option value="CANCELADO">Cancelado</option>
+                <option value="SIN_RESULTADO">Sin Resultado</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="input-actuacion-obs">Observaciones y Hallazgos *</label>
+            <textarea id="input-actuacion-obs" class="form-control" rows="4" placeholder="Describa claramente la comunicación sostenida con el aprendiz o acudiente..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="input-actuacion-proxima">Próxima Acción / Plan Inmediato</label>
+            <input type="text" id="input-actuacion-proxima" class="form-control" placeholder="Ej: Verificar asistencia el día lunes / Remitir a psicóloga">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" onclick="closeModal('modal-nueva-actuacion')">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar Actuación</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: NUEVO COMPROMISO -->
+  <div class="modal" id="modal-nuevo-compromiso">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Nuevo Compromiso o Tarea</h3>
+        <button class="modal-close" onclick="closeModal('modal-nuevo-compromiso')">&times;</button>
+      </div>
+      <form id="form-nuevo-compromiso">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="input-compromiso-desc">Descripción del Compromiso *</label>
+            <input type="text" id="input-compromiso-desc" class="form-control" placeholder="Ej: Entregar guías pendientes de formación / Retornar a clases presenciales" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="input-compromiso-resp">Responsable *</label>
+              <input type="text" id="input-compromiso-resp" class="form-control" value="Aprendiz" required>
+            </div>
+            <div class="form-group col">
+              <label for="input-compromiso-fecha">Fecha Límite *</label>
+              <input type="date" id="input-compromiso-fecha" class="form-control" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" onclick="closeModal('modal-nuevo-compromiso')">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Crear Compromiso</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: REGISTRAR APRENDIZ -->
+  <div class="modal" id="modal-nuevo-aprendiz">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Registrar Nuevo Aprendiz en Base de Datos</h3>
+        <button class="modal-close" onclick="closeModal('modal-nuevo-aprendiz')">&times;</button>
+      </div>
+      <form id="form-nuevo-aprendiz">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group col-4">
+              <label for="ap-tipo-doc">Tipo Doc *</label>
+              <select id="ap-tipo-doc" class="form-control">
+                <option value="CC">CC</option>
+                <option value="TI">TI</option>
+                <option value="CE">CE</option>
+                <option value="PPT">PPT</option>
+              </select>
+            </div>
+            <div class="form-group col-8">
+              <label for="ap-num-doc">Número de Documento *</label>
+              <input type="text" id="ap-num-doc" class="form-control" placeholder="1020304050" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="ap-nombres">Nombres *</label>
+              <input type="text" id="ap-nombres" class="form-control" required>
+            </div>
+            <div class="form-group col">
+              <label for="ap-apellidos">Apellidos *</label>
+              <input type="text" id="ap-apellidos" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="ap-email">Correo Electrónico *</label>
+              <input type="email" id="ap-email" class="form-control" required>
+            </div>
+            <div class="form-group col">
+              <label for="ap-telefono">Teléfono / Celular *</label>
+              <input type="text" id="ap-telefono" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-4">
+              <label for="ap-ficha">Código Ficha *</label>
+              <input type="text" id="ap-ficha" class="form-control" placeholder="2670192" required>
+            </div>
+            <div class="form-group col-8">
+              <label for="ap-programa">Programa de Formación *</label>
+              <input type="text" id="ap-programa" class="form-control" placeholder="Análisis y Desarrollo de Software (ADSO)" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="ap-jornada">Jornada *</label>
+            <select id="ap-jornada" class="form-control">
+              <option value="Diurna">Diurna</option>
+              <option value="Nocturna">Nocturna</option>
+              <option value="Mixta">Mixta</option>
+              <option value="Virtual">Virtual</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" onclick="closeModal('modal-nuevo-aprendiz')">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Registrar Aprendiz</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: TRANSICIÓN DE ESTADO (FSM) -->
+  <div class="modal" id="modal-transicion-fsm">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modal-fsm-title">Transición de Estado</h3>
+        <button class="modal-close" onclick="closeModal('modal-transicion-fsm')">&times;</button>
+      </div>
+      <form id="form-transicion-fsm">
+        <input type="hidden" id="transicion-nuevo-estado">
+        <div class="modal-body">
+          <p id="modal-fsm-desc" class="text-muted mb-3">Está a punto de cambiar el estado del caso.</p>
+
+          <div class="form-group" id="group-fsm-tipo-cierre" style="display: none;">
+            <label for="select-fsm-tipo-cierre">Tipo de Cierre Formal *</label>
+            <select id="select-fsm-tipo-cierre" class="form-control">
+              <option value="RETORNO_READMISION">RETORNO / READMISIÓN (Reincorporación Exitosa)</option>
+              <option value="DESERCION_CONFIRMADA">DESERCIÓN CONFIRMADA (Retiro Definitivo)</option>
+              <option value="TRANSFERIDO">TRANSFERIDO (Traslado a otra sede o programa)</option>
+              <option value="NO_APLICA">NO APLICA / CANCELACIÓN</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="group-fsm-asignar" style="display: none;">
+            <label for="select-fsm-asignar">Asignar a Gestor GAES *</label>
+            <select id="select-fsm-asignar" class="form-control">
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="input-fsm-justificacion">Justificación / Motivo del Cambio *</label>
+            <textarea id="input-fsm-justificacion" class="form-control" rows="3" placeholder="Indique las razones y evidencias que sustentan este cambio de estado..." required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" onclick="closeModal('modal-transicion-fsm')">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="btn-submit-transicion">Confirmar Transición</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

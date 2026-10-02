@@ -1,0 +1,13 @@
+class DominioError(Exception): pass
+class CasoActivoExistente(DominioError): pass
+class TransicionEstadoNoPermitida(DominioError): pass
+class EstadoTerminalError(DominioError): pass
+class ReaperturaNoPermitida(DominioError): pass
+class CierreNoAutorizado(DominioError): pass
+class CompromisosPendientesError(DominioError): pass
+class EvidenciasMinimasRequeridas(DominioError): pass
+class JustificacionRequeridaError(DominioError): pass
+class ArchivoNoPermitidoError(DominioError): pass
+class ArchivoDemasiadoGrandeError(DominioError): pass
+class PathTraversalDetectadoError(DominioError): pass
+class NombreArchivoInvalidoError(DominioError): pass
